@@ -31,7 +31,7 @@ public class ButtonClickEvent implements EditableRepliableEvent {
     public static void addListener(Long msgId, List<ButtonRow> buttonRows) {
         List<ButtonIdentifier> identifiers = MESSAGE_BUTTONS.getOrDefault(msgId, new ArrayList<>());
         buttonRows.forEach(buttonRow -> buttonRow.getButtons().forEach(button -> {
-            ButtonIdentifier buttonIdentifier = new ButtonIdentifier(msgId, button.button().getId());
+            ButtonIdentifier buttonIdentifier = new ButtonIdentifier(msgId, button.button().getCustomId());
             BUTTONS.put(buttonIdentifier, button);
             identifiers.add(buttonIdentifier);
         }));
@@ -89,7 +89,7 @@ public class ButtonClickEvent implements EditableRepliableEvent {
 
     public ButtonClickEvent(ButtonInteractionEvent event) {
         this.event = event;
-        this.button = BUTTONS.get(new ButtonIdentifier(event.getMessageIdLong(), event.getButton().getId()));
+        this.button = BUTTONS.get(new ButtonIdentifier(event.getMessageIdLong(), event.getButton().getCustomId()));
     }
 
     /**
@@ -106,7 +106,7 @@ public class ButtonClickEvent implements EditableRepliableEvent {
     }
 
     public String getButtonId() {
-        return event.getButton().getId();
+        return event.getButton().getCustomId();
     }
 
     private record ButtonIdentifier(Long msgId, String buttonId) {}

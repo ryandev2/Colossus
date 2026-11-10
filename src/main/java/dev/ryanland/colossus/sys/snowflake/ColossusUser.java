@@ -114,4 +114,10 @@ public record ColossusUser(User user) implements User {
     public long getIdLong() {
         return user().getIdLong();
     }
+
+    @Nullable
+    @Override
+    public PrimaryGuild getPrimaryGuild() {
+        return user().getPrimaryGuild();
+    }
 }

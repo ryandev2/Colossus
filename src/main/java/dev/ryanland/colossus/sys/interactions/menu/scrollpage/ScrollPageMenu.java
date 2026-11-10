@@ -9,10 +9,11 @@ import dev.ryanland.colossus.sys.interactions.button.ButtonRow;
 import dev.ryanland.colossus.sys.interactions.menu.InteractionMenu;
 import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import net.dv8tion.jda.api.interactions.components.text.TextInput;
-import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
-import net.dv8tion.jda.api.interactions.modals.Modal;
+import net.dv8tion.jda.api.components.buttons.Button;
+import net.dv8tion.jda.api.components.textinput.TextInput;
+import net.dv8tion.jda.api.components.textinput.TextInputStyle;
+import net.dv8tion.jda.api.components.label.Label;
+import net.dv8tion.jda.api.modals.Modal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +47,8 @@ public class ScrollPageMenu implements InteractionMenu {
             }),
             // current page
             BaseButton.user(userId, Button.secondary("current", "Page " + (page+1) + "/" + pages.size()).withDisabled(pages.size() <= 1), event -> {
-                event.reply(Modal.create("page", "Select Page").addActionRow(TextInput
-                    .create("page", "Page", TextInputStyle.SHORT).setPlaceholder("Enter page number...").build()).build(), evt -> {
+                event.reply(Modal.create("page", "Select Page").addComponents(Label.of("Page", TextInput
+                    .create("page", TextInputStyle.SHORT).setPlaceholder("Enter page number...").build())).build(), evt -> {
                     int newPage;
                     try {
                         newPage = Integer.parseInt(evt.getValue("page").getAsString());

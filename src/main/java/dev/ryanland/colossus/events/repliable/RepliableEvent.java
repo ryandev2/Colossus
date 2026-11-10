@@ -13,7 +13,7 @@ import dev.ryanland.colossus.sys.snowflake.ColossusMember;
 import dev.ryanland.colossus.sys.snowflake.ColossusUser;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.Channel;
-import net.dv8tion.jda.api.interactions.modals.Modal;
+import net.dv8tion.jda.api.modals.Modal;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;

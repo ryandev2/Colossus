@@ -12,8 +12,8 @@ import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.interactions.callbacks.IMessageEditCallback;
 import net.dv8tion.jda.api.interactions.callbacks.IModalCallback;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
-import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.interactions.modals.Modal;
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
+import net.dv8tion.jda.api.modals.Modal;
 import net.dv8tion.jda.api.requests.restaction.WebhookMessageCreateAction;
 import net.dv8tion.jda.api.requests.restaction.WebhookMessageEditAction;
 import net.dv8tion.jda.api.requests.restaction.interactions.MessageEditCallbackAction;
@@ -111,7 +111,7 @@ public interface EditableRepliableEvent extends RepliableEvent {
 
         if (!message.isEphemeral() || (message.isEphemeral() && getMessage().isEphemeral())) {
             // remove old listeners
-            if (!getMessage().getActionRows().isEmpty()) {
+            if (!getMessage().getComponents().isEmpty()) {
                 ExecutorUtil.cancel(getMessage().getId(), false); // cancel an active action row emptier
                 ButtonClickEvent.removeListeners(getMessage().getIdLong());
                 SelectMenuEvent.removeListeners(getMessage().getIdLong());

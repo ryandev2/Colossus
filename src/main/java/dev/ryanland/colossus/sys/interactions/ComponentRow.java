@@ -1,7 +1,7 @@
 package dev.ryanland.colossus.sys.interactions;
 
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
 
 public abstract class ComponentRow {
 

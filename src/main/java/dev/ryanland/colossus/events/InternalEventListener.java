@@ -33,7 +33,11 @@ public class InternalEventListener extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         if (!Config.getBoolean("slash_commands.enabled")) return;
-        new Thread(() -> CommandHandler.run(new SlashCommandEvent(event))).start();
+
+        event.deferReply().queue(
+            success -> new Thread(() -> CommandHandler.run(new SlashCommandEvent(event))).start(),
+            error -> Colossus.LOGGER.error("Failed to defer slash command interaction: " + event.getFullCommandName(), error)
+        );
     }
 
     // Slash command autocomplete
@@ -66,7 +70,7 @@ public class InternalEventListener extends ListenerAdapter {
     // Click button
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
-        String buttonId = event.getButton().getId();
+        String buttonId = event.getButton().getCustomId();
         try {
             if (STATIC_BUTTON_LISTENERS.containsKey(buttonId)) {
                 STATIC_BUTTON_LISTENERS.get(buttonId).accept(new ButtonClickEvent(event));

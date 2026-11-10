@@ -6,7 +6,7 @@ import dev.ryanland.colossus.sys.interactions.ComponentRow;
 import dev.ryanland.colossus.sys.interactions.menu.InteractionMenu;
 import dev.ryanland.colossus.sys.interactions.select.BaseSelectMenu;
 import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
-import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
+import net.dv8tion.jda.api.components.selections.StringSelectMenu;
 
 import java.util.List;
 

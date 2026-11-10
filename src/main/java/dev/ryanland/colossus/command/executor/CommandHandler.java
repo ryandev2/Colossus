@@ -24,9 +24,12 @@ import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInterac
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import net.dv8tion.jda.api.interactions.IntegrationType;
+import net.dv8tion.jda.api.interactions.InteractionContextType;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -149,7 +152,8 @@ public class CommandHandler {
 
             SlashCommandData slashCmdData = Commands.slash(command.getName(), command.getDescription())
                 .setLocalizationFunction(command.getLocalizationFunction())
-                .setGuildOnly(command.isGuildOnly())
+                .setContexts(command.isGuildOnly() ? EnumSet.of(InteractionContextType.GUILD) : InteractionContextType.ALL)
+                .setIntegrationTypes(IntegrationType.GUILD_INSTALL)
                 .setDefaultPermissions(command.getDefaultPermissions());
 
             // Subcommands
@@ -173,7 +177,8 @@ public class CommandHandler {
         for (ContextCommand<?> contextCommand : CONTEXT_COMMANDS) {
             CommandData cmdData = Commands.context(contextCommand.getType().getJDAEquivalent(), contextCommand.getName())
                 .setLocalizationFunction(contextCommand.getLocalizationFunction())
-                .setGuildOnly(contextCommand.isGuildOnly())
+                .setContexts(contextCommand.isGuildOnly() ? EnumSet.of(InteractionContextType.GUILD) : InteractionContextType.ALL)
+                .setIntegrationTypes(IntegrationType.GUILD_INSTALL)
                 .setDefaultPermissions(contextCommand.getDefaultPermissions());
 
             updater.addCommands(cmdData);

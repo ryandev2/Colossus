@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.channel.attribute.IPermissionContainer;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.unions.DefaultGuildChannelUnion;
 import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
+import net.dv8tion.jda.api.entities.RoleColors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,6 +19,7 @@ import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 public record ColossusMember(Member member) implements Member {
 
@@ -279,5 +281,22 @@ public record ColossusMember(Member member) implements Member {
     @Override
     public String getDefaultAvatarId() {
         return member().getDefaultAvatarId();
+    }
+
+    @NotNull
+    @Override
+    public RoleColors getColors() {
+        return member().getColors();
+    }
+
+    @NotNull
+    @Override
+    public Set<Role> getUnsortedRoles() {
+        return member().getUnsortedRoles();
+    }
+
+    @Override
+    public boolean isDetached() {
+        return member().isDetached();
     }
 }

@@ -132,7 +132,7 @@ public class CommandExecutor {
                         ((SlashCommand) cmdClass.getDeclaredConstructor().newInstance()).run(eventAsSlashCommand);
                     else if (event instanceof MessageCommandEvent)
                         ((MessageCommand) cmdClass.getDeclaredConstructor().newInstance()).run(eventAsMessageCommand);
-                } catch (NoSuchMethodException | CommandException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                } catch (Exception e) {
                     CommandHandler.handleCommandException(e, event);
                     return;
                 }

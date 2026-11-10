@@ -8,8 +8,8 @@ import dev.ryanland.colossus.sys.interactions.ComponentRow;
 import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
+import net.dv8tion.jda.api.components.selections.SelectMenu;
 
 import java.util.Collections;
 import java.util.List;

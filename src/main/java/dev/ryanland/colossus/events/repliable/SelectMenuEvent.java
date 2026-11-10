@@ -29,7 +29,7 @@ public class SelectMenuEvent implements EditableRepliableEvent {
      */
     public static void addListener(Long msgId, BaseSelectMenu selectMenu) {
         List<SelectMenuIdentifier> identifiers = MESSAGE_SELECT_MENUS.getOrDefault(msgId, new ArrayList<>());
-        SelectMenuIdentifier identifier = new SelectMenuIdentifier(msgId, selectMenu.getSelectMenu().getId());
+        SelectMenuIdentifier identifier = new SelectMenuIdentifier(msgId, selectMenu.getSelectMenu().getCustomId());
         SELECT_MENUS.put(identifier, selectMenu);
         identifiers.add(identifier);
         MESSAGE_SELECT_MENUS.put(msgId, identifiers);

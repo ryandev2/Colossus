@@ -2,7 +2,6 @@ package dev.ryanland.colossus.sys.snowflake;
 
 import dev.ryanland.colossus.sys.database.HibernateManager;
 import dev.ryanland.colossus.sys.database.entities.GuildEntity;
-import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.Region;
@@ -14,8 +13,13 @@ import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.unions.DefaultGuildChannelUnion;
 import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
+import net.dv8tion.jda.api.entities.guild.SecurityIncidentDetections;
+import net.dv8tion.jda.api.entities.guild.SystemChannelFlag;
 import net.dv8tion.jda.api.entities.sticker.GuildSticker;
 import net.dv8tion.jda.api.entities.sticker.StickerSnowflake;
+import net.dv8tion.jda.api.entities.SelfMember;
+import net.dv8tion.jda.api.entities.RoleMemberCounts;
+import net.dv8tion.jda.api.entities.guild.SecurityIncidentActions;
 import net.dv8tion.jda.api.entities.templates.Template;
 import net.dv8tion.jda.api.events.guild.member.GenericGuildMemberEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceGuildDeafenEvent;
@@ -93,11 +97,17 @@ public record ColossusGuild(Guild guild) implements Guild {
         return guild().updateCommands();
     }
 
-    
+
     @NotNull
     @Override
-    public CommandEditAction editCommandById(String id) {
-        return guild().editCommandById(id);
+    public CommandEditAction editCommandById(Command.Type type, String id) {
+        return guild().editCommandById(type, id);
+    }
+
+    @NotNull
+    @Override
+    public CommandEditAction editCommandById(Command.Type type, long id) {
+        return guild().editCommandById(type, id);
     }
 
     
@@ -339,16 +349,26 @@ public record ColossusGuild(Guild guild) implements Guild {
         return guild().getAfkTimeout();
     }
 
-    
+    @Override
+    public SecurityIncidentActions getSecurityIncidentActions() {
+        return guild().getSecurityIncidentActions();
+    }
+
+    @Override
+    public SecurityIncidentDetections getSecurityIncidentDetections() {
+        return guild().getSecurityIncidentDetections();
+    }
+
+
     @Override
     public boolean isMember(UserSnowflake user) {
         return guild().isMember(user);
     }
 
-    
+
     @NotNull
     @Override
-    public Member getSelfMember() {
+    public SelfMember getSelfMember() {
         return guild().getSelfMember();
     }
 
@@ -359,7 +379,12 @@ public record ColossusGuild(Guild guild) implements Guild {
         return guild().getNSFWLevel();
     }
 
-    
+    @Override
+    public Set<SystemChannelFlag> getSystemChannelFlags() {
+        return guild.getSystemChannelFlags();
+    }
+
+
     @Nullable
     @Override
     public Member getMember(UserSnowflake user) {
@@ -552,21 +577,8 @@ public record ColossusGuild(Guild guild) implements Guild {
         return guild().leave();
     }
 
-    
-    @NotNull
-    @Override
-    public RestAction<Void> delete() {
-        return guild().delete();
-    }
 
-    
-    @NotNull
-    @Override
-    public RestAction<Void> delete(String mfaCode) {
-        return guild().delete(mfaCode);
-    }
 
-    
     @NotNull
     @Override
     public AudioManager getAudioManager() {
@@ -709,7 +721,7 @@ public record ColossusGuild(Guild guild) implements Guild {
      *     <br>The specified channel was deleted before finishing the task</li>
      * </ul>
      *
-     * @param member       The {@link Member Member} that you are moving.
+     * @param user       The {@link Member Member} that you are moving.
      * @param audioChannel The destination {@link AudioChannel AudioChannel} to which the member is being
      *                     moved to. Or null to perform a voice kick.
      * @return {@link RestAction RestAction}
@@ -728,8 +740,8 @@ public record ColossusGuild(Guild guild) implements Guild {
      */
     @NotNull
     @Override
-    public RestAction<Void> moveVoiceMember(Member member, AudioChannel audioChannel) {
-        return guild().moveVoiceMember(member, audioChannel);
+    public RestAction<Void> moveVoiceMember(UserSnowflake user, AudioChannel audioChannel) {
+        return guild().moveVoiceMember(user, audioChannel);
     }
 
     /**
@@ -923,35 +935,6 @@ public record ColossusGuild(Guild guild) implements Guild {
     @Override
     public AuditableRestAction<Void> modifyMemberRoles(Member member, Collection<Role> roles) {
         return guild().modifyMemberRoles(member, roles);
-    }
-
-    /**
-     * Transfers the Guild ownership to the specified {@link Member Member}
-     * <br>Only available if the currently logged in account is the owner of this Guild
-     *
-     * <p>Possible {@link ErrorResponse ErrorResponses} caused by
-     * the returned {@link RestAction RestAction} include the following:
-     * <ul>
-     *     <li>{@link ErrorResponse#MISSING_PERMISSIONS MISSING_PERMISSIONS}
-     *     <br>The currently logged in account lost ownership before completing the task</li>
-     *
-     *     <li>{@link ErrorResponse#UNKNOWN_MEMBER UNKNOWN_MEMBER}
-     *     <br>The target Member was removed from the Guild before finishing the task</li>
-     * </ul>
-     *
-     * @param newOwner Not-null Member to transfer ownership to
-     * @return {@link AuditableRestAction AuditableRestAction}
-     * @throws PermissionException      If the currently logged in account is not the owner of this Guild
-     * @throws IllegalArgumentException <ul>
-     *                                              <li>If the specified Member is {@code null} or not from the same Guild</li>
-     *                                              <li>If the specified Member already is the Guild owner</li>
-     *                                              <li>If the specified Member is a bot account ({@link AccountType#BOT AccountType.BOT})</li>
-     *                                          </ul>
-     */
-    @NotNull
-    @Override
-    public AuditableRestAction<Void> transferOwnership(Member newOwner) {
-        return guild().transferOwnership(newOwner);
     }
 
     /**
@@ -1360,6 +1343,35 @@ public record ColossusGuild(Guild guild) implements Guild {
         return guild().modifyWelcomeScreen();
     }
 
+    @NotNull
+    @Override
+    public RestAction<RoleMemberCounts> retrieveRoleMemberCounts() {
+        return guild().retrieveRoleMemberCounts();
+    }
+
+    @NotNull
+    @Override
+    public AuditableRestAction<Void> modifySecurityIncidents(SecurityIncidentActions incidents) {
+        return guild().modifySecurityIncidents(incidents);
+    }
+
+    @NotNull
+    @Override
+    public CacheRestAction<GuildVoiceState> retrieveMemberVoiceStateById(long id) {
+        return guild().retrieveMemberVoiceStateById(id);
+    }
+
+    @NotNull
+    @Override
+    public RestAction<List<ScheduledEvent>> retrieveScheduledEvents(boolean withUserCount) {
+        return guild().retrieveScheduledEvents(withUserCount);
+    }
+
+    @Override
+    public int getSystemChannelFlagsRaw() {
+        return guild().getSystemChannelFlagsRaw();
+    }
+
     /**
      * The Snowflake id of this entity. This is unique to every entity and will never change.
      *
@@ -1368,5 +1380,10 @@ public record ColossusGuild(Guild guild) implements Guild {
     @Override
     public long getIdLong() {
         return guild().getIdLong();
+    }
+
+    @Override
+    public boolean isDetached() {
+        return guild().isDetached();
     }
 }
